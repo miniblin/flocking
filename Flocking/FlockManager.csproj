@@ -75,8 +75,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Boid.cs" />
-    <Compile Include="Assets\Scripts\FlockManager.cs" />
+    <Compile Include="Assets\Scripts\Flocking.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

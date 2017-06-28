@@ -11,6 +11,7 @@ public class Boid : MonoBehaviour {
     
     //target for seeking or fleeing
     public Transform target;
+    public Transform flee;
 
     //for path following
     public float pathRadius;
@@ -24,7 +25,8 @@ public class Boid : MonoBehaviour {
 	
 	
 	void Update () {
-        FollowPath();  
+        Seek(target.position);
+        Flee(flee.position);
         rigidbody.velocity = Vector3.ClampMagnitude(rigidbody.velocity, maxSpeed);
 	}
 

@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/BoidSeekTarget.unity
+- path: Assets/InsertionSortTest.unity
   isLoaded: 1
   isActive: 1

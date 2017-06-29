@@ -1,93 +1,268 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using CielaSpike;
 
 public class InsertionSort : MonoBehaviour {
     public int size;
-    Vector3[] values;
+    Vector3[,,] values;
+    int numChanges = 0;
+    GameObject[,,] objects;
+    public Transform target;
+    public Transform flee;
     // Use this for initialization
     void Start () {
-        values = CreateRandomVectorArray(size);
-        for (int i = 0; i < values.Length; i++)
-        {
-            Debug.Log(values[i].x+",");
-          
-        }
-        SortX(values);
-        
-        for (int i = 0; i < values.Length; i++)
-        {
-            Debug.Log(values[i].x + ",");
-           // System.Console.Write(values[i].x + ",");
-        }
-        
-	}
+        objects = new GameObject[size, size, size];
+        // size = 80;
+
+        values = new Vector3[size, size, size];
+        //values = CreateRandomVectorArray(size);
+        CreateGameObjects(size);
+        GetPositions();
+        this.StartCoroutineAsync(SortAll());
+    }
 
     // Update is called once per frame
     int a = 0;
 	void Update () {
-        
-        SortX(values);
-        SortY(values);
-        SortZ(values);
-        a++;
-        Debug.Log("sort:" + a + " Completed");
-	}
 
-    public Vector3[] CreateRandomVectorArray(int size)
+         
+
+
+    }
+    bool UpdateFlock = true;
+    IEnumerator SortAll()
     {
-        Vector3[] values = new Vector3[size];
+
+        while (UpdateFlock)
+        {
+            yield return Ninja.JumpToUnity;
+            GetPositions();
+          
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size; j++)
+                {
+                    for (int h = 0; h < size; h++)
+                    {
+                        if (h > 2 && h < 6 && j >2 && j < 6 && i > 2 && i < 6)
+                        {
+                            objects[i, j, h].GetComponent<Renderer>().material.color = Color.blue;
+                        }
+                        else
+                        {
+                            objects[i, j, h].GetComponent<Renderer>().material.color = Color.red;
+                        }
+                        objects[4, 4, 4].GetComponent<Renderer>().material.color = Color.green;
+                    }
+                }
+            }
+
+                        yield return Ninja.JumpBack;
+            //jump out of IEnumerator
+            //get position of all birds
+            //jump back in
+            SortX(values);
+           SortY(values);
+            SortZ(values);
+            a++;
+            Debug.Log("Pass #" + a);
+        }
+        yield break;
+    }
+
+    private void OnApplicationQuit()
+    {
+        UpdateFlock = false;
+    }
+
+    public void sort() { 
+}
+
+
+
+    public GameObject[,,] CreateGameObjects(int size)
+    {
+        System.Random random = new System.Random();
+       
         for (int i = 0; i < size; i++)
         {
-            values[i] = new Vector3((Random.Range(-10,10)), Random.Range(-10, 10), Random.Range(-10, 10));
+            for (int j = 0; j < size; j++)
+            {
+                for (int h = 0; h < size; h++)
+                {
+                    objects[i, j, h] = (GameObject)Instantiate(Resources.Load("Cube"), new Vector3(random.Next(-200, 200), random.Next(-200, 200), random.Next(-200, 200)), Quaternion.identity);
+                    objects[i, j, h].GetComponent<Boid>().target = target;
+                    objects[i, j, h].GetComponent<Boid>().flee = flee;
+
+
+                }
+            }
+
+        }
+        return objects;
+    }
+
+    public void GetPositions()
+    {
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                for (int h = 0; h < size; h++)
+                {
+                    values[i, j, h] = objects[i, j, h].transform.position;
+
+                }
+            }
+
+        }
+
+    }
+
+
+
+    public Vector3[,,] CreateRandomVectorArray(int size)
+    {
+        System.Random random = new System.Random();
+        Vector3[,,] values = new Vector3[size, size, size];
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                for (int h = 0; h < size; h++)
+                {
+                    values[i, j, h] = new Vector3((random.Next(-1000, 1000)), random.Next(-1000, 1000), random.Next(-1000, 1000));
+                }
+            }
+
         }
         return values;
     }
 
 
-    int j;
-    public void SortX(Vector3[] values)
+
+
+    //public void SortX(Vector3[,,] values)
+    //{
+    //    int j;
+    //    for (int y = 0; y < values.GetLength(1); y++)
+    //    {
+    //        for (int z = 0; z < values.GetLength(2); z++)
+    //        {
+    //            for (int i = 1; i < values.GetLength(0); i++)
+    //            {
+    //                Vector3 x = values[i, y, z];
+    //                j = i - 1;
+    //                while (j >= 0 && values[j, y, z].x > x.x)
+    //                {
+    //                    numChanges++;
+    //                    values[j + 1, y, z] = values[j, y, z];
+    //                    j = j - 1;
+    //                }
+    //                values[j + 1, y, z] = x;
+    //            }
+    //        }
+    //    }
+    //}
+
+    public void SortX(Vector3[,,] values)
     {
-        for (int i=1; i < values.Length; i++)
+
+        for (int y = 0; y < values.GetLength(1); y++)
         {
-            Vector3 x = values[i];
-            j = i - 1;
-            while (j>=0  && values[j].x > x.x)
+            for (int z = 0; z < values.GetLength(2); z++)
             {
-                values[j + 1] = values[j];
+
+                int loopy = y;
+                int loopz = z;
+
+                // Vector3[,,] valuesCopy = values;
+               
+                SortRow(loopy, loopz);
+
+
+            }
+        }
+    }
+   public void SortRow(int y, int z)
+    {
+        int j;
+        for (int i = 1; i < values.GetLength(0); i++)
+        {
+
+            Vector3 x = values[i, y, z];
+            GameObject gX = objects[i, y,z];
+            j = i - 1;
+            while (j >= 0 && values[j, y, z].x > x.x)
+            {
+                numChanges++;
+                values[j + 1, y, z] = values[j, y, z];
+                objects[j + 1, y, z] = objects[j, y, z];
                 j = j - 1;
             }
-            values[j + 1] = x;
+
+            values[j + 1, y, z] = x;
+            objects[j + 1, y, z] = gX;
+        }
+      //  yield break;
+    }
+
+    public void SortY(Vector3[,,] values)
+    {
+        int j;
+        for (int x = 0; x < values.GetLength(0); x++)
+        {
+            for (int z = 0; z < values.GetLength(2); z++)
+            {
+                for (int i = 1; i < values.GetLength(0); i++)
+                {
+
+
+                    Vector3 y = values[x, i, z];
+                    GameObject gY = objects[x, i, z];
+                    j = i - 1;
+                    while (j >= 0 && values[x, j, z].y > y.y)
+                    {
+                        numChanges++;
+                        values[x, j + 1, z] = values[x, j, z];
+                        objects[x, j + 1, z] = objects[x, j, z];
+                        j = j - 1;
+                    }
+
+                    values[x, j + 1, z] = y;
+                    objects[x, j + 1, z] = gY;
+                }
+            }
         }
     }
 
-    public void SortY(Vector3[] values)
-    {
-        for (int i = 1; i < values.Length; i++)
-        {
-            Vector3 x = values[i];
-            j = i - 1;
-            while (j >= 0 && values[j].y > x.y)
-            {
-                values[j + 1] = values[j];
-                j = j - 1;
-            }
-            values[j + 1] = x;
-        }
-    }
 
-    public void SortZ(Vector3[] values)
+
+    public void SortZ(Vector3[,,] values)
     {
-        for (int i = 1; i < values.Length; i++)
+        int j;
+        for (int x = 0; x < values.GetLength(0); x++)
         {
-            Vector3 x = values[i];
-            j = i - 1;
-            while (j >= 0 && values[j].z > x.z)
+            for (int y = 0; y < values.GetLength(1); y++)
             {
-                values[j + 1] = values[j];
-                j = j - 1;
+                for (int i = 1; i < values.GetLength(2); i++)
+                {
+                    Vector3 z = values[x, y, i];
+                    GameObject gZ =objects[x, y, i];
+                    j = i - 1;
+                    while (j >= 0 && values[x, y, j].z > z.z)
+                    {
+                        numChanges++;
+                        values[x, y, j + 1] = values[x, y, j];
+                        objects[x, y, j + 1] = objects[x, y, j];
+                        j = j - 1;
+                    }
+                    values[x, y, j + 1] = z;
+                    objects[x, y, j + 1] = gZ;
+                }
             }
-            values[j + 1] = x;
         }
     }
 }

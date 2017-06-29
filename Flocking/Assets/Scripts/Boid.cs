@@ -26,7 +26,8 @@ public class Boid : MonoBehaviour {
 	
 	void Update () {
         Seek(target.position);
-        Flee(flee.position);
+         Flee(flee.position);
+      //  Wander();
         rigidbody.velocity = Vector3.ClampMagnitude(rigidbody.velocity, maxSpeed);
 	}
 
@@ -37,7 +38,7 @@ public class Boid : MonoBehaviour {
         desired.Normalize();
         desired *= maxSpeed;
         
-        Vector3 steer = Vector3.ClampMagnitude((desired - rigidbody.velocity), maxForce);
+        Vector3 steer = 0.8f*Vector3.ClampMagnitude((desired - rigidbody.velocity), maxForce);
 
         rigidbody.AddForce(steer);
     }
@@ -51,7 +52,7 @@ public class Boid : MonoBehaviour {
         //slow the object down as it approaches its destination
         if (squaredDistance < (arrivalRadius * arrivalRadius))
         {
-            desired*=(Map(squaredDistance, 0, arrivalRadius, 0, maxSpeed));
+            desired*=(Map(squaredDistance, 0, arrivalRadius, 0, maxForce));
         }
         else
         {

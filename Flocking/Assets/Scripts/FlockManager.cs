@@ -27,7 +27,20 @@ public class FlockManager : MonoBehaviour {
 
 	}
 
+    public void Cohesion()
+    {
 
+    }
+
+    public void Seperation()
+    {
+
+    }
+
+    public void Alignment()
+    {
+
+    }
    
 
 

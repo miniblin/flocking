@@ -75,6 +75,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\CielaSpike\Thread Ninja\Example\ExampleScript.cs" />
+    <Compile Include="Assets\CielaSpike\Thread Ninja\Ninja.cs" />
+    <Compile Include="Assets\CielaSpike\Thread Ninja\Task.cs" />
+    <Compile Include="Assets\CielaSpike\Thread Ninja\TaskState.cs" />
+    <Compile Include="Assets\CielaSpike\Thread Ninja\ThreadNinjaMonoBehaviourExtensions.cs" />
     <Compile Include="Assets\Scripts\Boid.cs" />
     <Compile Include="Assets\Scripts\FlockManager.cs" />
     <Compile Include="Assets\Scripts\InsertionSort.cs" />

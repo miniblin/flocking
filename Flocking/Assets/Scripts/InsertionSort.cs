@@ -27,10 +27,71 @@ public class InsertionSort : MonoBehaviour {
     int a = 0;
 	void Update () {
 
-         
+
+        checkNeighbours(0, 0, 0, 2);
 
 
     }
+
+    public void checkNeighbours(int e,int f, int g, int radius)
+    {
+               
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                for (int h = 0; h < size; h++)
+                {
+                   // objects[i, j, h].GetComponent<Renderer>().material.color = Color.red;
+                }
+            }
+        }
+        for (int i = 0; i <= radius; i++)
+        {
+            for (int j = 0; j <= radius; j++)
+            {
+                for (int k = 0; k <= radius; k++)
+                {
+                    if (e + i < size)
+                    {
+                        if (f + j < size)
+                        {
+                            if (g + k < size) { objects[e + i, f + j, g + k].GetComponent<Renderer>().material.color = Color.blue; }
+                            if (g - k >= 0) { objects[e + i, f + j, g - k].GetComponent<Renderer>().material.color = Color.blue; }
+                        }
+
+                        if (f - j >= 0)
+                        {
+                            if (g + k < size) { objects[e + i, f - j, g + k].GetComponent<Renderer>().material.color = Color.blue; }
+                            if (g - k >= 0) { objects[e + i, f - j, g - k].GetComponent<Renderer>().material.color = Color.blue; }
+                        }
+                    }
+
+                    if (e - i >= 0)
+                    {
+                        if (f + j < size)
+                        {
+                            if (g + k < size) { objects[e - i, f + j, g + k].GetComponent<Renderer>().material.color = Color.blue; }
+                            if (g - k >= 0) { objects[e - i, f + j, g - k].GetComponent<Renderer>().material.color = Color.blue; }
+
+                        }
+
+                        if (f - j >= 0)
+                        {
+                            if (g + k < size) { objects[e - i, f - j, g + k].GetComponent<Renderer>().material.color = Color.blue; }
+                            if (g - k >= 0) { objects[e - i, f - j, g - k].GetComponent<Renderer>().material.color = Color.blue; }
+                        }
+                    }
+
+                    // objects[e + i, e + j, e + k].GetComponent<Renderer>().material.color = Color.blue;
+
+                }
+
+            }
+        }
+        objects[e, f, g].GetComponent<Renderer>().material.color = Color.green;
+    }
+
     bool UpdateFlock = true;
     IEnumerator SortAll()
     {
@@ -39,25 +100,10 @@ public class InsertionSort : MonoBehaviour {
         {
             yield return Ninja.JumpToUnity;
             GetPositions();
-          
-            for (int i = 0; i < size; i++)
-            {
-                for (int j = 0; j < size; j++)
-                {
-                    for (int h = 0; h < size; h++)
-                    {
-                        if (h > 2 && h < 6 && j >2 && j < 6 && i > 2 && i < 6)
-                        {
-                            objects[i, j, h].GetComponent<Renderer>().material.color = Color.blue;
-                        }
-                        else
-                        {
-                            objects[i, j, h].GetComponent<Renderer>().material.color = Color.red;
-                        }
-                        objects[4, 4, 4].GetComponent<Renderer>().material.color = Color.green;
-                    }
-                }
-            }
+         
+
+               // 
+                
 
                         yield return Ninja.JumpBack;
             //jump out of IEnumerator

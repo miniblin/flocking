@@ -11,6 +11,7 @@ public class InsertionSort : MonoBehaviour {
     GameObject[,,] objects;
     public Transform target;
     public Transform flee;
+    public int radius;
     // Use this for initialization
     void Start () {
         objects = new GameObject[size, size, size];
@@ -28,7 +29,7 @@ public class InsertionSort : MonoBehaviour {
 	void Update () {
 
 
-        checkNeighbours(0, 0, 0, 2);
+        checkNeighbours(0, 0, 0, radius);
 
 
     }
@@ -42,7 +43,7 @@ public class InsertionSort : MonoBehaviour {
             {
                 for (int h = 0; h < size; h++)
                 {
-                   // objects[i, j, h].GetComponent<Renderer>().material.color = Color.red;
+                    objects[i, j, h].GetComponent<Renderer>().material.color = Color.red;
                 }
             }
         }

@@ -12,26 +12,53 @@ public class InsertionSort : MonoBehaviour {
     public Transform target;
     public Transform flee;
     public int radius;
+    public float desiredSeperation;
     // Use this for initialization
     void Start () {
         objects = new GameObject[size, size, size];
-        // size = 80;
 
+       
         values = new Vector3[size, size, size];
         //values = CreateRandomVectorArray(size);
         CreateGameObjects(size);
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                for (int h = 0; h < size; h++)
+                {
+                    objects[i, j, h].GetComponent<Boid>().SetBoidArraySize(size);
+
+                }
+            }
+        }
         GetPositions();
         this.StartCoroutineAsync(SortAll());
     }
 
     // Update is called once per frame
     int a = 0;
-	void Update () {
+    void Update()
+    {
+
+        //  foreach(GameObject boid in objects)
+        //  {
+        //     
+        //  }
+
+        //can i get the neighbours within each boid. no need to loop through each one here
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                for (int h = 0; h < size; h++)
+                {
+                    objects[i, j, h].GetComponent<Boid>().Flock(objects, radius, i, j, h, desiredSeperation);
 
 
-        checkNeighbours(0, 0, 0, radius);
-
-
+                }
+            }
+        }
     }
 
     public void checkNeighbours(int e,int f, int g, int radius)
@@ -47,47 +74,64 @@ public class InsertionSort : MonoBehaviour {
                 }
             }
         }
-        for (int i = 0; i <= radius; i++)
+        //for (int i = 0; i <= radius; i++)
+        //{
+        //    for (int j = 0; j <= radius; j++)
+        //    {
+        //        for (int k = 0; k <= radius; k++)
+        //        {
+        //            if (e + i < size)
+        //            {
+        //                if (f + j < size)
+        //                {
+        //                    if (g + k < size) { objects[e + i, f + j, g + k].GetComponent<Renderer>().material.color = Color.blue; }
+        //                    if (g - k >= 0) { objects[e + i, f + j, g - k].GetComponent<Renderer>().material.color = Color.blue; }
+        //                }
+
+        //                if (f - j >= 0)
+        //                {
+        //                    if (g + k < size) { objects[e + i, f - j, g + k].GetComponent<Renderer>().material.color = Color.blue; }
+        //                    if (g - k >= 0) { objects[e + i, f - j, g - k].GetComponent<Renderer>().material.color = Color.blue; }
+        //                }
+        //            }
+
+        //            if (e - i >= 0)
+        //            {
+        //                if (f + j < size)
+        //                {
+        //                    if (g + k < size) { objects[e - i, f + j, g + k].GetComponent<Renderer>().material.color = Color.blue; }
+        //                    if (g - k >= 0) { objects[e - i, f + j, g - k].GetComponent<Renderer>().material.color = Color.blue; }
+
+        //                }
+
+        //                if (f - j >= 0)
+        //                {
+        //                    if (g + k < size) { objects[e - i, f - j, g + k].GetComponent<Renderer>().material.color = Color.blue; }
+        //                    if (g - k >= 0) { objects[e - i, f - j, g - k].GetComponent<Renderer>().material.color = Color.blue; }
+        //                }
+        //            }
+
+        //            // objects[e + i, e + j, e + k].GetComponent<Renderer>().material.color = Color.blue;
+
+        //        }
+
+        //    }
+        //}
+
+        for (int i = (-radius); i <= radius; i++)
         {
-            for (int j = 0; j <= radius; j++)
+            for (int j = (-radius); j <= radius; j++)
             {
-                for (int k = 0; k <= radius; k++)
+                for (int k = (-radius); k <= radius; k++)
                 {
-                    if (e + i < size)
+                    if (e + i < size && f + j < size && g + k < size && e + i >= 0 && f + j >= 0 && g + k >= 0)
                     {
-                        if (f + j < size)
-                        {
-                            if (g + k < size) { objects[e + i, f + j, g + k].GetComponent<Renderer>().material.color = Color.blue; }
-                            if (g - k >= 0) { objects[e + i, f + j, g - k].GetComponent<Renderer>().material.color = Color.blue; }
-                        }
 
-                        if (f - j >= 0)
-                        {
-                            if (g + k < size) { objects[e + i, f - j, g + k].GetComponent<Renderer>().material.color = Color.blue; }
-                            if (g - k >= 0) { objects[e + i, f - j, g - k].GetComponent<Renderer>().material.color = Color.blue; }
-                        }
+                        objects[e + i, f + j, g + k].GetComponent<Renderer>().material.color = Color.blue;
+
                     }
-
-                    if (e - i >= 0)
-                    {
-                        if (f + j < size)
-                        {
-                            if (g + k < size) { objects[e - i, f + j, g + k].GetComponent<Renderer>().material.color = Color.blue; }
-                            if (g - k >= 0) { objects[e - i, f + j, g - k].GetComponent<Renderer>().material.color = Color.blue; }
-
-                        }
-
-                        if (f - j >= 0)
-                        {
-                            if (g + k < size) { objects[e - i, f - j, g + k].GetComponent<Renderer>().material.color = Color.blue; }
-                            if (g - k >= 0) { objects[e - i, f - j, g - k].GetComponent<Renderer>().material.color = Color.blue; }
-                        }
-                    }
-
-                    // objects[e + i, e + j, e + k].GetComponent<Renderer>().material.color = Color.blue;
 
                 }
-
             }
         }
         objects[e, f, g].GetComponent<Renderer>().material.color = Color.green;

@@ -8,6 +8,17 @@ public class Boid : MonoBehaviour {
     public float maxForce;
     public float arrivalRadius;
     private Rigidbody rigidbody;
+    private int boidArraySize;
+    private GameObject[,,] neighbours;
+    private int neighbourRadius;
+
+    //this objects x,y,z coords
+    private int x;
+    private int y;
+    private int z;
+
+    //seperation
+    private float desiredSeperation;
     
     //target for seeking or fleeing
     public Transform target;
@@ -20,9 +31,13 @@ public class Boid : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         this.rigidbody = GetComponent<Rigidbody>();
+        
        
 	}
-	
+	public void SetBoidArraySize(int size)
+    {
+        boidArraySize = size;
+    }
 	
 	void Update () {
         Seek(target.position);
@@ -127,11 +142,7 @@ public class Boid : MonoBehaviour {
         return pathStart + path;
     }
 
-    public void Flock()
-    {
-
-    }
-
+    
 
 
     //maps a value from one range to another
@@ -160,4 +171,119 @@ public class Boid : MonoBehaviour {
     }
 
     //https://forum.unity3d.com/threads/how-to-check-a-vector3-position-is-between-two-other-vector3-along-a-line.461474/
+
+    //all boids, a radius to check. and the current boids x,y,z in the array;
+
+    public void Flock(GameObject[,,] neighbours, int radius, int x, int y, int z, float desiredSeperation)
+    {
+        this.neighbours = neighbours;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.desiredSeperation = desiredSeperation;
+        this.neighbourRadius = radius;
+        Seperate();
+        Alignment();
+    }
+
+
+    public void Seperate()
+    {
+        
+        //average f all fleeing vectors.
+        int count = 0;
+        Vector3 sumOfFleeVectors=new Vector3(0,0,0);
+        
+        for (int i = (-neighbourRadius); i <= neighbourRadius; i++)
+        {
+            for (int j = (-neighbourRadius); j <= neighbourRadius; j++)
+            {
+                for (int k = (-neighbourRadius); k <= neighbourRadius; k++)
+                {
+                    if (x + i < boidArraySize && y + j < boidArraySize && z + k < boidArraySize && x + i >= 0 && y + j >= 0 && z + k >= 0)
+                    {
+
+                        float d = Vector3.Distance(transform.position, neighbours[x + i, y + j, z + k].transform.position);
+                        if (d < desiredSeperation && (d > 0))
+                        {
+                            Vector3 difference = (transform.position - neighbours[x + i, y + j, z + k].transform.position);
+                            difference.Normalize();
+                            difference /= d;
+                            sumOfFleeVectors += difference;
+                            count++;
+                        }
+                    }
+
+                }
+            }
+        }
+
+
+        //sum allthe flee vectors of neighbours cheking all neighbours!!! v slow;
+        //foreach (GameObject n in neighbours)
+        //{
+
+        //    float d = Vector3.Distance(transform.position, n.transform.position);
+        //    if (d < desiredSeperation && (d > 0))
+        //    {
+        //        Vector3  difference =(transform.position - n.transform.position);
+        //        difference.Normalize();
+        //        difference /= d;
+        //        sumOfFleeVectors += difference;
+        //        count++;
+        //    }
+        //}
+       
+        //average the flee vectors;
+        if (count > 0)
+        {
+            sumOfFleeVectors /= count;
+            sumOfFleeVectors.Normalize();
+            sumOfFleeVectors *= (maxSpeed);
+            Vector3 steer= Vector3.ClampMagnitude((sumOfFleeVectors - rigidbody.velocity), maxForce);
+            rigidbody.AddForce(steer);
+        }
+
+    }
+
+
+    public void Alignment()
+    {
+        int count = 0;
+        Vector3 sumOfNeighbourVeleocities = new Vector3(0, 0, 0);
+        float neighbourDistance = 50;
+        for (int i = (-neighbourRadius); i <= neighbourRadius; i++)
+        {
+            for (int j = (-neighbourRadius); j <= neighbourRadius; j++)
+            {
+                for (int k = (-neighbourRadius); k <= neighbourRadius; k++)
+                {
+                    if (x + i < boidArraySize && y + j < boidArraySize && z + k < boidArraySize && x + i >= 0 && y + j >= 0 && z + k >= 0)
+                    {
+
+                        float d = Vector3.Distance(transform.position, neighbours[x + i, y + j, z + k].transform.position);
+                        if (d < neighbourDistance && (d > 0))
+                        {
+
+                            sumOfNeighbourVeleocities += neighbours[x + i, y + j, z + k].GetComponent<Rigidbody>().velocity;
+                            count++;
+                        }
+                    }
+
+                }
+            }
+        }
+
+        if (count > 0)
+        {
+            sumOfNeighbourVeleocities /= count;
+            sumOfNeighbourVeleocities.Normalize();
+            sumOfNeighbourVeleocities *= (maxSpeed);
+            Vector3 steer = Vector3.ClampMagnitude((sumOfNeighbourVeleocities - rigidbody.velocity), maxForce);
+        }
+          
+    }
+
+     
+
 }

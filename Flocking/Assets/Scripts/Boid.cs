@@ -34,17 +34,21 @@ public class Boid : MonoBehaviour {
         
        
 	}
+
+
 	public void SetBoidArraySize(int size)
     {
         boidArraySize = size;
     }
 	
 	void Update () {
-        Seek(target.position);
-         Flee(flee.position);
-      //  Wander();
+      //  Seek(target.position);
+       //  Flee(flee.position);
+       // Wander();
         rigidbody.velocity = Vector3.ClampMagnitude(rigidbody.velocity, maxSpeed);
-	}
+        transform.LookAt(transform.position+ rigidbody.velocity);
+
+    }
 
    
     public void Flee(Vector3 ThreatPosition)
@@ -81,15 +85,39 @@ public class Boid : MonoBehaviour {
 
 
     }
-     
+    //to remove, used for testing
+    public void WanderSeek(Vector3 target)
+    {
+        Vector3 desired = (target - transform.position);
+        float squaredDistance = desired.sqrMagnitude;
+
+        desired.Normalize();
+        //slow the object down as it approaches its destination
+        if (squaredDistance < (arrivalRadius * arrivalRadius))
+        {
+            desired *= (Map(squaredDistance, 0, arrivalRadius, 0, maxForce));
+        }
+        else
+        {
+            desired *= maxSpeed;
+        }
+
+        Vector3 steer = Vector3.ClampMagnitude((desired - rigidbody.velocity), maxForce);
+
+
+        rigidbody.AddForce(0.6f*steer);
+
+
+    }
+
 
     public void Wander()
     {
         Vector3 predictedPoint =PredictedLocation(100);
         Vector3 randomDirection= predictedPoint+(Random.onUnitSphere.normalized* 30);
-        Debug.DrawLine(transform.position, predictedPoint, Color.red);
-        Debug.DrawLine(predictedPoint, randomDirection, Color.blue);
-        Seek(randomDirection);
+       // Debug.DrawLine(transform.position, predictedPoint, Color.red);
+      //  Debug.DrawLine(predictedPoint, randomDirection, Color.blue);
+        WanderSeek(randomDirection);
 
     }
 
@@ -182,8 +210,9 @@ public class Boid : MonoBehaviour {
         this.z = z;
         this.desiredSeperation = desiredSeperation;
         this.neighbourRadius = radius;
-        Seperate();
+       Seperate();
         Alignment();
+        Cohesion();
     }
 
 
@@ -284,6 +313,40 @@ public class Boid : MonoBehaviour {
           
     }
 
-     
+    public void Cohesion()
+    {
+        int count = 0;
+        Vector3 sumOfNeighborPositions = new Vector3(0, 0, 0);
+        float neighbourDistance = 40;
+        for (int i = (-neighbourRadius); i <= neighbourRadius; i++)
+        {
+            for (int j = (-neighbourRadius); j <= neighbourRadius; j++)
+            {
+                for (int k = (-neighbourRadius); k <= neighbourRadius; k++)
+                {
+                    if (x + i < boidArraySize && y + j < boidArraySize && z + k < boidArraySize && x + i >= 0 && y + j >= 0 && z + k >= 0)
+                    {
 
-}
+                        float d = Vector3.Distance(transform.position, neighbours[x + i, y + j, z + k].transform.position);
+                        if (d < neighbourDistance && (d > 0))
+                        {
+
+                            sumOfNeighborPositions += neighbours[x + i, y + j, z + k].transform.position;
+                            count++;
+                        }
+                    }
+
+                }
+            }
+        }
+
+        if (count > 0)
+        {
+            sumOfNeighborPositions /= count;
+            Seek(sumOfNeighborPositions);
+        }
+
+    }
+
+} 
+

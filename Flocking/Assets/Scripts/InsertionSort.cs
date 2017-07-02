@@ -183,7 +183,7 @@ public class InsertionSort : MonoBehaviour {
             {
                 for (int h = 0; h < size; h++)
                 {
-                    objects[i, j, h] = (GameObject)Instantiate(Resources.Load("Cube"), new Vector3(random.Next(-200, 200), random.Next(-200, 200), random.Next(-200, 200)), Quaternion.identity);
+                    objects[i, j, h] = (GameObject)Instantiate(Resources.Load("Seagull"), new Vector3(random.Next(-100, 100), random.Next(-100, 100), random.Next(-100, 100)), Quaternion.identity);
                     objects[i, j, h].GetComponent<Boid>().target = target;
                     objects[i, j, h].GetComponent<Boid>().flee = flee;
 
@@ -224,7 +224,7 @@ public class InsertionSort : MonoBehaviour {
             {
                 for (int h = 0; h < size; h++)
                 {
-                    values[i, j, h] = new Vector3((random.Next(-1000, 1000)), random.Next(-1000, 1000), random.Next(-1000, 1000));
+                    values[i, j, h] = new Vector3((random.Next(-250, 250)), random.Next(-250, 250), random.Next(-250, 250));
                 }
             }
 

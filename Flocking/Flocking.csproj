@@ -80,6 +80,7 @@
     <Compile Include="Assets\CielaSpike\Thread Ninja\Task.cs" />
     <Compile Include="Assets\CielaSpike\Thread Ninja\TaskState.cs" />
     <Compile Include="Assets\CielaSpike\Thread Ninja\ThreadNinjaMonoBehaviourExtensions.cs" />
+    <Compile Include="Assets\GhostFreeRoamCamera\Scripts\GhostFreeRoamCamera.cs" />
     <Compile Include="Assets\SailCharacterPack\Scripts\AnimatedUVs.cs" />
     <Compile Include="Assets\SailCharacterPack\Scripts\DemoCamera.cs" />
     <Compile Include="Assets\SailCharacterPack\Scripts\FacialExpressions.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Assets\Scripts\InsertionSort.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\GhostFreeRoamCamera\READEME.txt" />
     <None Include="Assets\SailCharacterPack\Readme.txt" />
     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Basic.shader" />
     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-BasicOutline.shader" />

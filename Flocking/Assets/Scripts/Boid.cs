@@ -19,7 +19,10 @@ public class Boid : MonoBehaviour {
 
     //seperation
     private float desiredSeperation;
-    
+
+    //alignment and cohesion
+    private float neighbourDistance;
+
     //target for seeking or fleeing
     public Transform target;
     public Transform flee;
@@ -42,13 +45,16 @@ public class Boid : MonoBehaviour {
     }
 	
 	void Update () {
-      //  Seek(target.position);
-       //  Flee(flee.position);
-       // Wander();
+      // Seek(target.position);
+       // Flee(flee.position);
+        Wander();
         rigidbody.velocity = Vector3.ClampMagnitude(rigidbody.velocity, maxSpeed);
         transform.LookAt(transform.position+ rigidbody.velocity);
 
+
     }
+
+   
 
    
     public void Flee(Vector3 ThreatPosition)
@@ -202,7 +208,7 @@ public class Boid : MonoBehaviour {
 
     //all boids, a radius to check. and the current boids x,y,z in the array;
 
-    public void Flock(GameObject[,,] neighbours, int radius, int x, int y, int z, float desiredSeperation)
+    public void Flock(GameObject[,,] neighbours, int radius, int x, int y, int z, float desiredSeperation, float neighbourDistance)
     {
         this.neighbours = neighbours;
         this.x = x;
@@ -210,19 +216,37 @@ public class Boid : MonoBehaviour {
         this.z = z;
         this.desiredSeperation = desiredSeperation;
         this.neighbourRadius = radius;
+        this.neighbourDistance = neighbourDistance;
        Seperate();
-        Alignment();
-        Cohesion();
+       // Alignment();
+       // Cohesion();
     }
 
+    int seperationCount = 0;
+    Vector3 sumOfFleeVectors = new Vector3(0, 0, 0);
 
+    int cohesionCount = 0;
+    Vector3 sumOfNeighborPositions = new Vector3(0, 0, 0);
+
+    int alignmentCount = 0;
+    Vector3 sumOfNeighbourVeleocities = new Vector3(0, 0, 0);
+
+    Vector3 difference;
+    float d;
     public void Seperate()
     {
+
+        //average  all fleeing vectors of local neighbours.
+        seperationCount = 0;
+        cohesionCount = 0;
+        alignmentCount = 0;
+
+        sumOfFleeVectors = Vector3.zero;
+        sumOfNeighborPositions = Vector3.zero;
+        sumOfNeighborPositions = Vector3.zero;
+
         
-        //average f all fleeing vectors.
-        int count = 0;
-        Vector3 sumOfFleeVectors=new Vector3(0,0,0);
-        
+
         for (int i = (-neighbourRadius); i <= neighbourRadius; i++)
         {
             for (int j = (-neighbourRadius); j <= neighbourRadius; j++)
@@ -232,15 +256,32 @@ public class Boid : MonoBehaviour {
                     if (x + i < boidArraySize && y + j < boidArraySize && z + k < boidArraySize && x + i >= 0 && y + j >= 0 && z + k >= 0)
                     {
 
-                        float d = Vector3.Distance(transform.position, neighbours[x + i, y + j, z + k].transform.position);
+                        //seperation
+                        d = Vector3.Distance(transform.position, neighbours[x + i, y + j, z + k].transform.position);
                         if (d < desiredSeperation && (d > 0))
                         {
-                            Vector3 difference = (transform.position - neighbours[x + i, y + j, z + k].transform.position);
+                            difference = (transform.position - neighbours[x + i, y + j, z + k].transform.position);
                             difference.Normalize();
                             difference /= d;
                             sumOfFleeVectors += difference;
-                            count++;
+                            seperationCount++;
                         }
+
+                        //cohesion
+                        if (d < neighbourDistance && (d > 0))
+                        {
+
+                            sumOfNeighborPositions += neighbours[x + i, y + j, z + k].transform.position;
+                            cohesionCount++;
+
+
+                            //alignment
+
+                            sumOfNeighbourVeleocities += neighbours[x + i, y + j, z + k].GetComponent<Rigidbody>().velocity;
+                            alignmentCount++;
+                        }
+
+
                     }
 
                 }
@@ -262,15 +303,31 @@ public class Boid : MonoBehaviour {
         //        count++;
         //    }
         //}
-       
+
         //average the flee vectors;
-        if (count > 0)
+        
+        if (seperationCount > 0)
         {
-            sumOfFleeVectors /= count;
+            sumOfFleeVectors /= seperationCount;
             sumOfFleeVectors.Normalize();
             sumOfFleeVectors *= (maxSpeed);
-            Vector3 steer= Vector3.ClampMagnitude((sumOfFleeVectors - rigidbody.velocity), maxForce);
-            rigidbody.AddForce(steer);
+            Vector3 seperationSteer= Vector3.ClampMagnitude((sumOfFleeVectors - rigidbody.velocity), maxForce);
+            rigidbody.AddForce(seperationSteer);
+        }
+
+        if (cohesionCount > 0)
+        {
+            sumOfNeighborPositions /= cohesionCount;
+            Seek(sumOfNeighborPositions);
+        }
+
+        if (alignmentCount > 0)
+        {
+            sumOfNeighbourVeleocities /= alignmentCount;
+            sumOfNeighbourVeleocities.Normalize();
+            sumOfNeighbourVeleocities *= (maxSpeed);
+            Vector3 steer = Vector3.ClampMagnitude((sumOfNeighbourVeleocities - rigidbody.velocity), maxForce);
+            rigidbody.AddForce(0.4f * steer);
         }
 
     }
@@ -280,7 +337,7 @@ public class Boid : MonoBehaviour {
     {
         int count = 0;
         Vector3 sumOfNeighbourVeleocities = new Vector3(0, 0, 0);
-        float neighbourDistance = 50;
+        float neighbourDistance = 40;
         for (int i = (-neighbourRadius); i <= neighbourRadius; i++)
         {
             for (int j = (-neighbourRadius); j <= neighbourRadius; j++)

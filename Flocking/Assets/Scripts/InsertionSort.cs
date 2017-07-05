@@ -13,6 +13,9 @@ public class InsertionSort : MonoBehaviour {
     public Transform flee;
     public int radius;
     public float desiredSeperation;
+    public int spawnArea;
+    
+    public float neighbourDistance;
     // Use this for initialization
     void Start () {
         objects = new GameObject[size, size, size];
@@ -34,26 +37,29 @@ public class InsertionSort : MonoBehaviour {
         }
         GetPositions();
         this.StartCoroutineAsync(SortAll());
+        
+
     }
 
     // Update is called once per frame
     int a = 0;
     void Update()
     {
+        //MainThreadSort();
 
         //  foreach(GameObject boid in objects)
         //  {
         //     
         //  }
 
-        //can i get the neighbours within each boid. no need to loop through each one here
+        //  can i get the neighbours within each boid. no need to loop through each one here
         for (int i = 0; i < size; i++)
         {
             for (int j = 0; j < size; j++)
             {
                 for (int h = 0; h < size; h++)
                 {
-                    objects[i, j, h].GetComponent<Boid>().Flock(objects, radius, i, j, h, desiredSeperation);
+                    objects[i, j, h].GetComponent<Boid>().Flock(objects, radius, i, j, h, desiredSeperation, neighbourDistance);
 
 
                 }
@@ -61,6 +67,27 @@ public class InsertionSort : MonoBehaviour {
         }
     }
 
+
+    public void MainThreadSort()
+    {
+        
+            GetPositions();
+
+
+            // 
+
+
+            
+            //jump out of IEnumerator
+            //get position of all birds
+            //jump back in
+            SortX(values);
+            SortY(values);
+            SortZ(values);
+            a++;
+            Debug.Log("Pass #" + a);
+        
+    }
     public void checkNeighbours(int e,int f, int g, int radius)
     {
                
@@ -183,7 +210,7 @@ public class InsertionSort : MonoBehaviour {
             {
                 for (int h = 0; h < size; h++)
                 {
-                    objects[i, j, h] = (GameObject)Instantiate(Resources.Load("Seagull"), new Vector3(random.Next(-100, 100), random.Next(-100, 100), random.Next(-100, 100)), Quaternion.identity);
+                    objects[i, j, h] = (GameObject)Instantiate(Resources.Load("Seagull"), new Vector3(random.Next(-spawnArea, spawnArea), random.Next(-spawnArea, spawnArea), random.Next(-spawnArea, spawnArea)), Quaternion.identity);
                     objects[i, j, h].GetComponent<Boid>().target = target;
                     objects[i, j, h].GetComponent<Boid>().flee = flee;
 

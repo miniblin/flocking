@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/InsertionSortTest.unity
+- path: Assets/FlockingWithInsertionSort.unity
   isLoaded: 1
   isActive: 1

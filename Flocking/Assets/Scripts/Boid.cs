@@ -45,7 +45,7 @@ public class Boid : MonoBehaviour {
     }
 	
 	void Update () {
-      // Seek(target.position);
+       //Seek(target.position);
        // Flee(flee.position);
         Wander();
         rigidbody.velocity = Vector3.ClampMagnitude(rigidbody.velocity, maxSpeed);

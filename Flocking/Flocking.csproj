@@ -86,8 +86,12 @@
     <Compile Include="Assets\SailCharacterPack\Scripts\FacialExpressions.cs" />
     <Compile Include="Assets\SailCharacterPack\Scripts\SmallFishEmitter.cs" />
     <Compile Include="Assets\Scripts\Boid.cs" />
+    <Compile Include="Assets\Scripts\BoidSeekAndAvoid.cs" />
     <Compile Include="Assets\Scripts\FlockManager.cs" />
+    <Compile Include="Assets\Scripts\FlockMangerWithInsertionSort.cs" />
     <Compile Include="Assets\Scripts\InsertionSort.cs" />
+    <Compile Include="Assets\Scripts\SpawnUnitsWithNoBehaviours.cs" />
+    <Compile Include="Assets\Scripts\spawnUnitsSeekAndAvoid.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\GhostFreeRoamCamera\READEME.txt" />

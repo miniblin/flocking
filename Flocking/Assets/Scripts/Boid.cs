@@ -51,12 +51,17 @@ public class Boid : MonoBehaviour {
         rigidbody.velocity = Vector3.ClampMagnitude(rigidbody.velocity, maxSpeed);
         transform.LookAt(transform.position+ rigidbody.velocity);
 
-
+        
     }
 
-   
+    private void FixedUpdate()
+    {
+        CollisionAvoidance();
+    }
 
-   
+
+
+
     public void Flee(Vector3 ThreatPosition)
     {
         Vector3 desired = (transform.position-ThreatPosition);
@@ -380,6 +385,9 @@ public class Boid : MonoBehaviour {
 
     public void CollisionAvoidance()
     {
+        Vector3 forward = transform.TransformDirection(Vector3.forward) * 10;
+        Debug.DrawRay(transform.position, forward, Color.green);
+
         //seek edge of object
         //do a good avoid
 

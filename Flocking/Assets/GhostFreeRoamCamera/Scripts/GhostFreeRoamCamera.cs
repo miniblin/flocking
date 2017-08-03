@@ -63,7 +63,10 @@ public class GhostFreeRoamCamera : MonoBehaviour
             Vector3 eulerAngles = transform.eulerAngles;
             eulerAngles.x += -Input.GetAxis("Mouse Y") * 359f * cursorSensitivity;
             eulerAngles.y += Input.GetAxis("Mouse X") * 359f * cursorSensitivity;
-            transform.eulerAngles = eulerAngles;
+            if (eulerAngles.x < 89 || eulerAngles.x > 271)
+            {
+                transform.eulerAngles = eulerAngles;
+            }
         }
 
         if (cursorToggleAllowed)

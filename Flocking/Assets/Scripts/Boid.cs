@@ -396,6 +396,62 @@ public class Boid : MonoBehaviour {
     }
 
 
+    /*private Vector3 FindEdge()
+    {
+        bool colliding;
+        
+        float up ;
+        float down;
+        float left;
+        float right ;
+        float z ;
+        float step = 0.1f;
+        ;
+        if (!colliding) {
+            
+            up = 0;
+            float down = 0;
+            float left = 0;
+            float right = 0;
+            float z = 1;
+            float step = 0.1f;
+            colliding = true;
+            while (colliding)
+                }
+        {
+            if (up <= 1) //while not looking directly up
+            {
+                lookUp = transform.TransformDirection(new Vector3(0, up += step, z) * 10);
+                Debug.DrawRay(transform.position, lookUp, Color.red);
+
+            }
+
+            if (down <= 1) //while not looking directly down
+            {
+                lookDown = transform.TransformDirection(new Vector3(0, up += step, z) * 10);
+                Debug.DrawRay(transform.position, lookDown, Color.yellow);
+            }
+
+            if (right <= 1) //while not looking directly up
+            {
+                lookRight = transform.TransformDirection(new Vector3(0, up += step, z) * 10);
+                Debug.DrawRay(transform.position, lookRight, Color.blue);
+
+            }
+
+            if (left <= 1) //while not looking directly up
+            {
+                lookLeft = transform.TransformDirection(new Vector3(0, up += step, z) * 10);
+                Debug.DrawRay(transform.position, lookLeft, Color.magenta);
+
+            }
+
+            z -= step;
+        }
+        return new Vector3(0, 0, 0);
+    }
+
+    */
     public void Cohesion()
     {
         int count = 0;

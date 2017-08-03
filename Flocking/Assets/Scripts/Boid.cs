@@ -370,6 +370,24 @@ public class Boid : MonoBehaviour {
           
     }
 
+    public void StayInBounds(Vector3 min, Vector3 max)
+    {
+       //if nearing aboundary, turn the fuck around!
+       //same direction but neg x,y or z depening onding which boundary 
+       // being broken
+
+    }
+
+    public void CollisionAvoidance()
+    {
+        //seek edge of object
+        //do a good avoid
+
+        //after this has been implemented, introduce a ground plane and some sky scrapers
+        //make a fuckinig great demo for paul
+    }
+
+
     public void Cohesion()
     {
         int count = 0;

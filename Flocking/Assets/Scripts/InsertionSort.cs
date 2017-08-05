@@ -185,7 +185,7 @@ public class InsertionSort : MonoBehaviour {
            SortY(values);
             SortZ(values);
             a++;
-            Debug.Log("Pass #" + a);
+           // Debug.Log("Pass #" + a);
         }
         yield break;
     }
@@ -210,7 +210,7 @@ public class InsertionSort : MonoBehaviour {
             {
                 for (int h = 0; h < size; h++)
                 {
-                    objects[i, j, h] = (GameObject)Instantiate(Resources.Load("Starling"), new Vector3(random.Next(-spawnArea, spawnArea), random.Next(-spawnArea, spawnArea), random.Next(-spawnArea, spawnArea)), Quaternion.identity);
+                    objects[i, j, h] = (GameObject)Instantiate(Resources.Load("Starling"), new Vector3(random.Next(-spawnArea, spawnArea), random.Next(-100, spawnArea-100), random.Next(-spawnArea, spawnArea)), Quaternion.identity);
                     objects[i, j, h].GetComponent<Boid>().target = target;
                     objects[i, j, h].GetComponent<Boid>().flee = flee;
 

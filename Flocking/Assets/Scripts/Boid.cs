@@ -7,6 +7,9 @@ public class Boid : MonoBehaviour {
     public float maxSpeed;
     public float maxForce;
     public float arrivalRadius;
+
+    public Vector3 minBounds;
+    public Vector3 maxBounds;
     private Rigidbody rigidbody;
     private int boidArraySize;
     private GameObject[,,] neighbours;
@@ -31,10 +34,12 @@ public class Boid : MonoBehaviour {
     public float pathRadius;
     public List<Transform> pathCheckPoints;
 
+    private ObstacleAvoidance obstacleAvoidance;
+
 	// Use this for initialization
 	void Start () {
         this.rigidbody = GetComponent<Rigidbody>();
-        
+        obstacleAvoidance = new ObstacleAvoidance(transform, rigidbody);
        
 	}
 
@@ -45,21 +50,59 @@ public class Boid : MonoBehaviour {
     }
 	
 	void Update () {
+     
        //Seek(target.position);
        // Flee(flee.position);
         Wander();
         rigidbody.velocity = Vector3.ClampMagnitude(rigidbody.velocity, maxSpeed);
         transform.LookAt(transform.position+ rigidbody.velocity);
-
+        obstacleAvoidance.AvoidObstacles();
+        CheckBounds();  
+        
         
     }
 
     private void FixedUpdate()
     {
-        CollisionAvoidance();
+       // CollisionAvoidance();
     }
 
+    
+    public void CheckBounds()
+    {
+        Vector3 desired=rigidbody.velocity;
+        if (transform.position.x < minBounds.x)
+        {
+            desired = (new Vector3(minBounds.x, transform.position.y, transform.position.z) - transform.position);
+        }
+        if (transform.position.y < minBounds.y)
+        {
+            desired = (new Vector3(transform.position.x, minBounds.y, transform.position.z) - transform.position);
+        }
+        if (transform.position.z < minBounds.z)
+        {
+            desired = (new Vector3(transform.position.x, transform.position.y, minBounds.z) - transform.position);
+        }
+        if (transform.position.x > maxBounds.x)
+        {
+            desired = (new Vector3(maxBounds.x, transform.position.y, transform.position.z) - transform.position);
+        }
+        if (transform.position.y > maxBounds.y)
+        {
+            desired = (new Vector3(transform.position.x, maxBounds.y, transform.position.z) - transform.position);
+        }
 
+        if (transform.position.z > maxBounds.z)
+        {
+            desired = (new Vector3(transform.position.x, transform.position.y, maxBounds.z) - transform.position);
+        }
+
+        
+        Vector3 steer = 1.3f * Vector3.ClampMagnitude((desired - rigidbody.velocity), maxForce);
+
+        rigidbody.AddForce(steer);
+        //reeverse the thing in the bounds direction
+        }
 
 
     public void Flee(Vector3 ThreatPosition)
@@ -72,6 +115,13 @@ public class Boid : MonoBehaviour {
 
         rigidbody.AddForce(steer);
     }
+
+
+
+
+
+
+
 
     public void Seek(Vector3 target)
     {
@@ -93,8 +143,6 @@ public class Boid : MonoBehaviour {
 
         
         rigidbody.AddForce(steer);
-
-
     }
     //to remove, used for testing
     public void WanderSeek(Vector3 target)
@@ -383,75 +431,22 @@ public class Boid : MonoBehaviour {
 
     }
 
-    public void CollisionAvoidance()
-    {
-        Vector3 forward = transform.TransformDirection(Vector3.forward) * 10;
-        Debug.DrawRay(transform.position, forward, Color.green);
+   // public void CollisionAvoidance()
+   // {
+       // Vector3 forward = transform.TransformDirection(Vector3.forward) * 10;
+       // Debug.DrawRay(transform.position, forward, Color.green);
 
         //seek edge of object
         //do a good avoid
 
         //after this has been implemented, introduce a ground plane and some sky scrapers
         //make a fuckinig great demo for paul
-    }
+   // }
 
 
-    /*private Vector3 FindEdge()
-    {
-        bool colliding;
-        
-        float up ;
-        float down;
-        float left;
-        float right ;
-        float z ;
-        float step = 0.1f;
-        ;
-        if (!colliding) {
-            
-            up = 0;
-            float down = 0;
-            float left = 0;
-            float right = 0;
-            float z = 1;
-            float step = 0.1f;
-            colliding = true;
-            while (colliding)
-                }
-        {
-            if (up <= 1) //while not looking directly up
-            {
-                lookUp = transform.TransformDirection(new Vector3(0, up += step, z) * 10);
-                Debug.DrawRay(transform.position, lookUp, Color.red);
+    
 
-            }
-
-            if (down <= 1) //while not looking directly down
-            {
-                lookDown = transform.TransformDirection(new Vector3(0, up += step, z) * 10);
-                Debug.DrawRay(transform.position, lookDown, Color.yellow);
-            }
-
-            if (right <= 1) //while not looking directly up
-            {
-                lookRight = transform.TransformDirection(new Vector3(0, up += step, z) * 10);
-                Debug.DrawRay(transform.position, lookRight, Color.blue);
-
-            }
-
-            if (left <= 1) //while not looking directly up
-            {
-                lookLeft = transform.TransformDirection(new Vector3(0, up += step, z) * 10);
-                Debug.DrawRay(transform.position, lookLeft, Color.magenta);
-
-            }
-
-            z -= step;
-        }
-        return new Vector3(0, 0, 0);
-    }
-
-    */
+   
     public void Cohesion()
     {
         int count = 0;

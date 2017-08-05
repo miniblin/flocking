@@ -64,7 +64,7 @@ class ObstacleAvoidance : MonoBehaviour
         Vector3 steer = Vector3.ClampMagnitude((desired - rigidbody.velocity), maxForce);
 
         rigidbody.velocity = Vector3.zero;
-        rigidbody.AddForce(steer);
+        rigidbody.AddForce(steer*5);//should be 1 for birds
     }
 
 

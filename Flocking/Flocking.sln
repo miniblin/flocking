@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flocking.Plugins", "Flocking.Plugins.csproj", "{4E96984B-4101-0630-72D6-8328E0BFF067}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flocking", "Flocking.csproj", "{FD1AC5A5-8D78-9554-7C10-A3DA0217FCC1}"
 EndProject
 Global
@@ -9,6 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4E96984B-4101-0630-72D6-8328E0BFF067}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E96984B-4101-0630-72D6-8328E0BFF067}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E96984B-4101-0630-72D6-8328E0BFF067}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E96984B-4101-0630-72D6-8328E0BFF067}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FD1AC5A5-8D78-9554-7C10-A3DA0217FCC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FD1AC5A5-8D78-9554-7C10-A3DA0217FCC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD1AC5A5-8D78-9554-7C10-A3DA0217FCC1}.Release|Any CPU.ActiveCfg = Release|Any CPU

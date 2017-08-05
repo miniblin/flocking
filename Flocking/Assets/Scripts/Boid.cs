@@ -176,7 +176,8 @@ public class Boid : MonoBehaviour {
         Vector3 randomDirection= predictedPoint+(Random.onUnitSphere.normalized* 30);
        // Debug.DrawLine(transform.position, predictedPoint, Color.red);
       //  Debug.DrawLine(predictedPoint, randomDirection, Color.blue);
-        WanderSeek(randomDirection);
+    //    WanderSeek(randomDirection);
+        WanderSeek(new Vector3(randomDirection.x,transform.position.y,randomDirection.z));
 
     }
 
